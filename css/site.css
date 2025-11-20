@@ -829,6 +829,16 @@ textarea {
     margin-top: 1rem;
 }
 
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+.table-wrapper .table {
+    min-width: 540px;
+}
+
 .table th,
 .table td {
     padding: 0.8rem;
@@ -1095,6 +1105,29 @@ textarea {
 
     .submenu li a {
         color: var(--light);
+    }
+
+    .profile-hero {
+        padding: 2rem 1rem;
+        text-align: center;
+    }
+
+    .profile-hero .bio {
+        padding: 1.25rem;
+    }
+
+    .profile-hero .meta {
+        justify-content: center;
+    }
+
+    .profile-hero img {
+        max-width: 320px;
+    }
+
+    .table th,
+    .table td {
+        padding: 0.65rem;
+        font-size: 0.95rem;
     }
 
     .slide-overlay {
