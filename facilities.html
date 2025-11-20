@@ -70,28 +70,50 @@
     <main>
         <section class="content-section">
             <h2 class="section-title">Campus highlights</h2>
-            <div class="card-grid">
-                <article class="card">
-                    <img src="images/conferenceroom.jpg" alt="Learning commons" />
-                    <h3>Conference Room</h3>
-                    <p>Conducive environment for meetings, seminars and collaborative group discussions.</p>
-                </article>
-                <article class="card">
-                    <img src="images/stdcon2.jpg" alt="ICT lab" />
-                    <h3>Well ventilated Classroom</h3>
-                    <p>Students exposed to New Classroom at the Tertiary Wing</p>
-                </article>
-                <article class="card">
-                    <img src="images/p2.jpg" alt="Dorm" />
-                    <h3>Computer Lab</h3>
-                    <p>Students using computer Labs during practical sessions.</p>
-                </article>
-                <article class="card">
-                    <img src="images/teachers staff opening (4).JPG" alt="Early childhood lab" />
-                    <h3>Teachers New Staff Building</h3>
-                    <p>Model Staff Building for Teachers and Administration</p>
-                </article>
+            <p class="section-lead">Swipe through the spaces our students love most and tap the images to reveal the story behind each one.</p>
+
+            <div class="highlight-slider" aria-live="polite">
+                <button class="highlight-control prev" aria-label="Previous highlight">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                </button>
+
+                <div class="highlight-track" role="list">
+                    <article class="highlight-slide" role="listitem">
+                        <img src="images/conferenceroom.jpg" alt="Learning commons" />
+                        <div class="highlight-overlay">
+                            <h3>Conference Room</h3>
+                            <p>Conducive environment for meetings, seminars and collaborative group discussions.</p>
+                        </div>
+                    </article>
+                    <article class="highlight-slide" role="listitem">
+                        <img src="images/stdcon2.jpg" alt="ICT lab" />
+                        <div class="highlight-overlay">
+                            <h3>Well-ventilated Classroom</h3>
+                            <p>Students thrive in our airy tertiary wing classrooms equipped for active learning.</p>
+                        </div>
+                    </article>
+                    <article class="highlight-slide" role="listitem">
+                        <img src="images/p2.jpg" alt="Computer lab" />
+                        <div class="highlight-overlay">
+                            <h3>Computer Lab</h3>
+                            <p>Hands-on computer lab sessions connect theory to real-world digital skills.</p>
+                        </div>
+                    </article>
+                    <article class="highlight-slide" role="listitem">
+                        <img src="images/teachers staff opening (4).JPG" alt="Staff building" />
+                        <div class="highlight-overlay">
+                            <h3>Teachers New Staff Building</h3>
+                            <p>A welcoming hub for lecturers and administrators to collaborate and serve students.</p>
+                        </div>
+                    </article>
+                </div>
+
+                <button class="highlight-control next" aria-label="Next highlight">
+                    <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                </button>
             </div>
+
+            <div class="highlight-dots" role="tablist" aria-label="Campus highlight slides"></div>
         </section>
     </main>
 
