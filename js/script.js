@@ -9,11 +9,20 @@
     }
 
     const submenuLinks = document.querySelectorAll('.has-submenu > a');
+    const isMobileNav = () => {
+        const toggleButton = document.querySelector('.menu-toggle');
+        return toggleButton ? getComputedStyle(toggleButton).display !== 'none' : window.matchMedia('(max-width: 900px)').matches;
+    };
+
     submenuLinks.forEach(link => {
         const parent = link.parentElement;
         link.setAttribute('aria-expanded', 'false');
 
         link.addEventListener('click', e => {
+            if(!isMobileNav()){
+                return;
+            }
+
             e.preventDefault();
             const isOpen = parent.classList.contains('open');
 
