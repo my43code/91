@@ -974,6 +974,10 @@ textarea {
     font-size: 0.85rem;
 }
 
+.footer-bottom p {
+    text-align: center;
+}
+
 .slider {
     position: relative;
     padding-top: 0;
