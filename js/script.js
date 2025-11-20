@@ -115,6 +115,103 @@
         }
     }
 
+    const highlightSlider = document.querySelector('.highlight-slider');
+    if(highlightSlider){
+        const track = highlightSlider.querySelector('.highlight-track');
+        const slides = Array.from(highlightSlider.querySelectorAll('.highlight-slide'));
+        const dotsContainer = document.querySelector('.highlight-dots');
+        const prev = highlightSlider.querySelector('.highlight-control.prev');
+        const next = highlightSlider.querySelector('.highlight-control.next');
+        let activeIndex = 0;
+        let sliderTimer;
+
+        const renderDots = () => {
+            if(!dotsContainer){
+                return;
+            }
+            dotsContainer.innerHTML = '';
+            slides.forEach((_, i) => {
+                const dot = document.createElement('button');
+                dot.type = 'button';
+                dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+                dot.addEventListener('click', () => goToSlide(i, true));
+                dotsContainer.appendChild(dot);
+            });
+        };
+
+        const syncDots = () => {
+            if(!dotsContainer){
+                return;
+            }
+            dotsContainer.querySelectorAll('button').forEach((dot, i) => {
+                dot.classList.toggle('active', i === activeIndex);
+                dot.setAttribute('aria-pressed', i === activeIndex ? 'true' : 'false');
+            });
+        };
+
+        const resetOverlayStates = () => {
+            slides.forEach(slide => {
+                const overlay = slide.querySelector('.highlight-overlay');
+                if(overlay){
+                    overlay.classList.remove('show');
+                }
+            });
+        };
+
+        const goToSlide = (index, pauseAuto = false) => {
+            if(!track || slides.length === 0){
+                return;
+            }
+            activeIndex = (index + slides.length) % slides.length;
+            track.style.transform = `translateX(-${activeIndex * 100}%)`;
+            syncDots();
+            resetOverlayStates();
+            if(pauseAuto){
+                restartAutoplay();
+            }
+        };
+
+        const restartAutoplay = () => {
+            clearInterval(sliderTimer);
+            sliderTimer = setInterval(() => goToSlide(activeIndex + 1), 4500);
+        };
+
+        renderDots();
+        syncDots();
+        restartAutoplay();
+
+        slides.forEach(slide => {
+            slide.setAttribute('tabindex', '0');
+            const overlay = slide.querySelector('.highlight-overlay');
+            const toggleOverlay = () => {
+                if(!overlay){
+                    return;
+                }
+                const isVisible = overlay.classList.contains('show');
+                resetOverlayStates();
+                if(!isVisible){
+                    overlay.classList.remove('show');
+                    void overlay.offsetWidth;
+                    overlay.classList.add('show');
+                }
+            };
+
+            slide.addEventListener('click', toggleOverlay);
+            slide.addEventListener('keydown', (e) => {
+                if(e.key === 'Enter' || e.key === ' '){
+                    e.preventDefault();
+                    toggleOverlay();
+                }
+            });
+        });
+
+        prev?.addEventListener('click', () => goToSlide(activeIndex - 1, true));
+        next?.addEventListener('click', () => goToSlide(activeIndex + 1, true));
+
+        highlightSlider.addEventListener('mouseenter', () => clearInterval(sliderTimer));
+        highlightSlider.addEventListener('mouseleave', restartAutoplay);
+    }
+
     const showcaseGrid = document.getElementById('showcase-grid');
     if(showcaseGrid){
         const showcaseItems = [
