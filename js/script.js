@@ -152,6 +152,80 @@
             }
         ];
 
+        const immersiveOverlay = document.createElement('div');
+        immersiveOverlay.className = 'showcase-immersive';
+        immersiveOverlay.innerHTML = `
+            <div class="showcase-stage" role="dialog" aria-modal="true" aria-label="Expanded gallery item">
+                <button class="showcase-close" aria-label="Close gallery">Close</button>
+                <div class="media-wrapper"></div>
+                <div class="showcase-caption">
+                    <h3></h3>
+                    <p></p>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(immersiveOverlay);
+
+        const mediaWrapper = immersiveOverlay.querySelector('.media-wrapper');
+        const caption = immersiveOverlay.querySelector('.showcase-caption');
+        const captionTitle = caption?.querySelector('h3');
+        const captionDesc = caption?.querySelector('p');
+        const closeOverlay = () => immersiveOverlay.classList.remove('active');
+
+        immersiveOverlay.addEventListener('click', (e) => {
+            if(e.target === immersiveOverlay){
+                closeOverlay();
+            }
+        });
+
+        immersiveOverlay.querySelector('.showcase-close')?.addEventListener('click', closeOverlay);
+
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'Escape' && immersiveOverlay.classList.contains('active')){
+                closeOverlay();
+            }
+        });
+
+        const openOverlay = (item) => {
+            if(!mediaWrapper || !caption || !captionTitle || !captionDesc){
+                return;
+            }
+
+            mediaWrapper.innerHTML = '';
+            let mediaEl;
+            if(item.type === 'video'){
+                mediaEl = document.createElement(item.embed ? 'iframe' : 'video');
+                if(item.embed){
+                    mediaEl.src = item.src;
+                    mediaEl.title = item.title;
+                    mediaEl.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+                    mediaEl.allowFullscreen = true;
+                } else {
+                    mediaEl.controls = true;
+                    const source = document.createElement('source');
+                    source.src = item.src;
+                    source.type = 'video/mp4';
+                    mediaEl.appendChild(source);
+                }
+            } else {
+                mediaEl = document.createElement('img');
+                mediaEl.src = item.src;
+                mediaEl.alt = item.title;
+            }
+
+            mediaWrapper.appendChild(mediaEl);
+
+            captionTitle.textContent = item.title;
+            captionDesc.textContent = item.description;
+
+            caption.classList.remove('swing-in');
+            void caption.offsetWidth;
+            caption.classList.add('swing-in');
+
+            immersiveOverlay.classList.add('active');
+        };
+
         const renderShowcase = (filter = 'all') => {
             showcaseGrid.innerHTML = '';
             const filteredItems = showcaseItems.filter(item => filter === 'all' ? true : item.type === filter);
@@ -195,6 +269,7 @@
                 card.appendChild(mediaEl);
                 card.appendChild(heading);
                 card.appendChild(desc);
+                card.addEventListener('click', () => openOverlay(item));
                 showcaseGrid.appendChild(card);
             });
         };
