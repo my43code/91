@@ -1,0 +1,227 @@
+(function(){
+    const menuToggle = document.querySelector('.menu-toggle');
+    const menu = document.getElementById('main-menu');
+    if(menuToggle && menu){
+        menuToggle.addEventListener('click', () => {
+            const isOpen = menu.classList.toggle('show');
+            menuToggle.setAttribute('aria-expanded', String(isOpen));
+        });
+    }
+
+    const submenuLinks = document.querySelectorAll('.has-submenu > a');
+    submenuLinks.forEach(link => {
+        const parent = link.parentElement;
+        link.setAttribute('aria-expanded', 'false');
+
+        link.addEventListener('click', e => {
+            e.preventDefault();
+            const isOpen = parent.classList.contains('open');
+
+            document.querySelectorAll('.has-submenu.open').forEach(item => {
+                if(item !== parent){
+                    item.classList.remove('open');
+                    const trigger = item.querySelector(':scope > a');
+                    if(trigger){
+                        trigger.setAttribute('aria-expanded', 'false');
+                    }
+                }
+            });
+
+            parent.classList.toggle('open', !isOpen);
+            link.setAttribute('aria-expanded', (!isOpen).toString());
+        });
+    });
+
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    const currentHash = window.location.hash;
+    const navLinks = document.querySelectorAll('#main-menu a');
+    navLinks.forEach(link => {
+        const href = link.getAttribute('href') || '';
+        const [normalizedPath, hashPart] = href.split('#');
+        const linkHash = hashPart ? `#${hashPart}` : '';
+        const matchesPage = normalizedPath === currentPage || (currentPage === '' && normalizedPath === 'index.html');
+        const matchesHash = linkHash ? linkHash === currentHash : currentHash === '';
+
+        if(matchesPage && matchesHash){
+            link.classList.add('active');
+            link.setAttribute('aria-current', 'page');
+            const parentToggle = link.closest('.submenu')?.previousElementSibling;
+            if(parentToggle){
+                parentToggle.classList.add('active');
+            }
+        }
+    });
+
+    const yearEl = document.getElementById('year');
+    if(yearEl){
+        yearEl.textContent = new Date().getFullYear();
+    }
+
+    const slider = document.querySelector('.slider');
+    if(slider){
+        const images = Array.from(slider.querySelectorAll('#slides img'));
+        if(images.length > 0){
+            let idx = 0;
+            const overlayTitle = document.getElementById('slideTitle');
+            const overlayText = document.getElementById('slideText');
+            const captions = [
+                {
+                    title: 'Where Faith Meets Academic Excellence',
+                    text: 'Papua New Guinea Christian Institute of Higher Education prepares servant leaders for National Capital District and Papua New Guinea.'
+                },
+                {
+                    title: 'Hands-on Learning & Community Impact',
+                    text: 'Students contribute to rural schools, health posts and community outreach.'
+                },
+                {
+                    title: 'Modern Facilities in at Waigani Christian College',
+                    text: 'Smart classrooms annd care ensure holistic formation.'
+                }
+            ];
+
+            const showSlide = (pos) => {
+                images.forEach((img, i) => img.classList.toggle('active', i === pos));
+                const caption = captions[pos] || captions[0];
+                if(overlayTitle){
+                    overlayTitle.textContent = caption.title;
+                }
+                if(overlayText){
+                    overlayText.textContent = caption.text;
+                }
+            };
+
+            showSlide(idx);
+            let timer = setInterval(() => {
+                idx = (idx + 1) % images.length;
+                showSlide(idx);
+            }, 2500);
+
+            slider.addEventListener('mouseenter', () => clearInterval(timer));
+            slider.addEventListener('mouseleave', () => {
+                timer = setInterval(() => {
+                    idx = (idx + 1) % images.length;
+                    showSlide(idx);
+                }, 2500);
+            });
+        }
+    }
+
+    const showcaseGrid = document.getElementById('showcase-grid');
+    if(showcaseGrid){
+        const showcaseItems = [
+            {
+                type: 'image',
+                src: 'images/facility1.jpg',
+                title: 'Learning commons redesign',
+                description: 'Students collaborate on capstone projects inside the refreshed digital commons.'
+            },
+            {
+                type: 'image',
+                src: 'images/carexpo2.jpg',
+                title: 'career Expo presentations',
+                description: '2025 Career, NCD, Port Moresby'
+            },
+            {
+                type: 'image',
+                src: 'images/stdcon2.jpg',
+                title: 'New Classroom for the Papua New Guinea Christian Institute of Higher Education',
+                description: 'Students introduced to new classroom block with smart technology and flexible seating.'
+            },
+            {
+                type: 'image',
+                src: 'images/facilities (3).jpg',
+                title: 'Best Learning Environment',
+                description: 'Standards Buildings for student.'
+            },
+           
+            {
+                type: 'video',
+                src: 'videos/bejhistory.mp4',
+                embed: false,
+                title: 'The expansion of School over the years',
+                description: 'The Director of the Waigani Christain College, MP for North Wagi, Hon.Benjmain Mul,visiting the school and giving a brief history of the school and its expansion over the years.'
+            }
+        ];
+
+        const renderShowcase = (filter = 'all') => {
+            showcaseGrid.innerHTML = '';
+            const filteredItems = showcaseItems.filter(item => filter === 'all' ? true : item.type === filter);
+            if(filteredItems.length === 0){
+                const message = document.createElement('p');
+                message.textContent = 'More media moments are being curated. Please check back soon!';
+                showcaseGrid.appendChild(message);
+                return;
+            }
+
+            filteredItems.forEach(item => {
+                const card = document.createElement('article');
+                card.className = 'showcase-card';
+                let mediaEl;
+                if(item.type === 'video'){
+                    if(item.embed){
+                        mediaEl = document.createElement('iframe');
+                        mediaEl.src = item.src;
+                        mediaEl.title = item.title;
+                        mediaEl.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+                        mediaEl.allowFullscreen = true;
+                    } else {
+                        mediaEl = document.createElement('video');
+                        mediaEl.controls = true;
+                        const source = document.createElement('source');
+                        source.src = item.src;
+                        source.type = 'video/mp4';
+                        mediaEl.appendChild(source);
+                    }
+                } else {
+                    mediaEl = document.createElement('img');
+                    mediaEl.src = item.src;
+                    mediaEl.alt = item.title;
+                }
+
+                const heading = document.createElement('h3');
+                heading.textContent = item.title;
+                const desc = document.createElement('p');
+                desc.textContent = item.description;
+
+                card.appendChild(mediaEl);
+                card.appendChild(heading);
+                card.appendChild(desc);
+                showcaseGrid.appendChild(card);
+            });
+        };
+
+        renderShowcase();
+
+        const tabs = document.querySelectorAll('.filter-tabs .tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(btn => {
+                    btn.classList.toggle('active', btn === tab);
+                    btn.setAttribute('aria-pressed', btn === tab ? 'true' : 'false');
+                });
+                renderShowcase(tab.dataset.filter);
+            });
+        });
+    }
+
+    document.querySelectorAll('.view-info').forEach(button => {
+        const profileBody = button.closest('.profile-body');
+        const details = profileBody ? profileBody.querySelector('.profile-details') : null;
+        const icon = button.querySelector('i');
+
+        if(!details){
+            return;
+        }
+
+        button.addEventListener('click', () => {
+            const shouldShow = details.hasAttribute('hidden');
+            details.hidden = !shouldShow;
+            button.setAttribute('aria-expanded', shouldShow ? 'true' : 'false');
+            button.lastChild.textContent = shouldShow ? ' Hide info' : ' View info';
+            if(icon){
+                icon.classList.toggle('fa-eye', !shouldShow);
+                icon.classList.toggle('fa-eye-slash', shouldShow);
+            }
+        });
+    });
+})();
