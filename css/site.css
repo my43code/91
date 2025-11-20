@@ -457,6 +457,75 @@ input[type="submit"],
     gap: 1rem;
 }
 
+.requirements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+}
+
+.requirement-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    min-height: 320px;
+    background: var(--light);
+    box-shadow: 0 14px 26px rgba(0,0,0,0.1);
+    isolation: isolate;
+}
+
+.requirement-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: var(--card-image);
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.55);
+    z-index: 0;
+}
+
+.requirement-overlay,
+.requirement-details {
+    position: relative;
+    z-index: 1;
+    padding: 1.25rem;
+    color: #fff;
+}
+
+.requirement-overlay {
+    display: grid;
+    gap: 0.65rem;
+    align-content: space-between;
+    min-height: 320px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.65));
+}
+
+.requirement-details {
+    background: rgba(0,0,0,0.75);
+    border-top: 1px solid rgba(255,255,255,0.12);
+}
+
+.requirement-details ul {
+    margin-left: 1rem;
+    display: grid;
+    gap: 0.35rem;
+}
+
+.requirement-details h4 {
+    margin-bottom: 0.5rem;
+    color: #fff;
+}
+
+.requirement-note {
+    margin-top: 0.65rem;
+    font-weight: 600;
+    color: var(--secondary);
+}
+
+.requirement-card .btn {
+    width: fit-content;
+}
+
 .highlight-slider {
     position: relative;
     overflow: hidden;

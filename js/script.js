@@ -405,4 +405,27 @@
             }
         });
     });
+
+    const toggleButtons = document.querySelectorAll('.toggle-requirement');
+    toggleButtons.forEach(button => {
+        const targetId = button.getAttribute('data-target');
+        const target = targetId ? document.getElementById(targetId) : null;
+        if(!target){
+            return;
+        }
+
+        button.setAttribute('aria-expanded', 'false');
+        button.setAttribute('aria-controls', targetId);
+
+        button.addEventListener('click', () => {
+            const willShow = target.hasAttribute('hidden');
+            document.querySelectorAll('.requirement-details').forEach(panel => {
+                if(panel !== target){
+                    panel.hidden = true;
+                }
+            });
+            target.hidden = !willShow;
+            button.setAttribute('aria-expanded', willShow ? 'true' : 'false');
+        });
+    });
 })();
